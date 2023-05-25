@@ -1,0 +1,9 @@
+.node-side-panel {
+    padding: 5px;
+    border: 1px gray;
+}
+
+.node-side-panel input[type="text"] {
+    padding: 5px;
+    width: 95%;
+}
