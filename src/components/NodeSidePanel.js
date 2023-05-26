@@ -4,7 +4,11 @@
  */
 
 import './NodeSidePanel.css';
-import { useReactFlow } from "reactflow";
+import {
+  useOnSelectionChange,
+  useReactFlow
+} from "reactflow";
+import { useState } from "react";
 
 function NodeSidePanel() {
 
@@ -13,15 +17,36 @@ function NodeSidePanel() {
   const defaultX = 100;
   const defaultY = 100;
 
+  const [selectedNode, setSelectedNode] = useState(null);
+  const [name, setName] = useState(selectedNode?.data?.label ?? "");
+  const [desc, setDesc] = useState(selectedNode?.data?.desc ?? "");
+  const [code, setCode] = useState(selectedNode?.data?.code ?? "");
+  const [decision, setDecision] = useState(selectedNode?.data?.decision ?? "");
+
+  // // FIXME: this triggers two re-renders of this component when selecting a node.
+  useOnSelectionChange({
+    onChange: ({ nodes }) => {
+      let newSelectedNode = null;
+      // We only want to use an existing node in the form if a single node
+      // is selected.
+      // Otherwise (`newSelectedNode` remains `null`), we reset the form to
+      // the default value.
+      if (nodes.length === 1) {
+        newSelectedNode = nodes[0];
+      }
+      setSelectedNode(newSelectedNode);
+      setName(newSelectedNode?.data?.label ?? "");
+      setDesc(newSelectedNode?.data?.desc ?? "");
+      setCode(newSelectedNode?.data?.code ?? "");
+      setDecision(newSelectedNode?.data?.decision ?? "");
+    }
+  });
+
   const onClickNewNode = (params) => {
     // TODO: validate the form:
     //   - name must not be empty;
     //   - name must not already exist in the list of nodes;
     //   - at least one of the radio buttons must be checked.
-    const name = document.getElementById('new-node-name').value;
-    const desc = document.getElementById('new-node-desc').value;
-    const code = document.getElementById('new-node-lambda').value;
-    const decision = document.querySelector('input[name=decision]:checked').value;
 
     const newNode = {
       id: name,
@@ -51,6 +76,8 @@ function NodeSidePanel() {
         id='new-node-name'
         name="name"
         placeholder="Short and unique identifier"
+        onChange={ (event) => setName(event.target.value) }
+        value={name}
       />
       <br />
       <br />
@@ -62,6 +89,8 @@ function NodeSidePanel() {
         id='new-node-desc'
         name="desc"
         placeholder="Long human-readable description"
+        onChange={ (event) => setDesc(event.target.value) }
+        value={desc}
       />
       <br />
       <br />
@@ -73,6 +102,8 @@ function NodeSidePanel() {
         id='new-node-lambda'
         name="lambda"
         placeholder="Lambda expression for aliveness"
+        onChange={ (event) => setCode(event.target.value) }
+        value={code}
       />
       <br />
       <br />
@@ -84,6 +115,8 @@ function NodeSidePanel() {
         id="support"
         name="decision"
         value="support"
+        onChange={ (event) => setDecision(event.target.value) }
+        checked={ decision === "support" }
       />
       <label htmlFor="support">Support (moral)</label>
       <br />
@@ -92,6 +125,8 @@ function NodeSidePanel() {
         id="counter"
         name="decision"
         value="counter"
+        onChange={ (event) => setDecision(event.target.value) }
+        checked={ decision === "counter" }
       />
       <label htmlFor="counter">Counter (immoral)</label>
       <br />
@@ -100,7 +135,8 @@ function NodeSidePanel() {
         id="neutral"
         name="decision"
         value=""
-        checked
+        onChange={ (event) => setDecision(event.target.value) }
+        checked={ (decision ?? "") === "" }
       />
       <label htmlFor="neutral">Neutral</label>
       <br />
