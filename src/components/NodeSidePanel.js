@@ -69,46 +69,52 @@ function NodeSidePanel() {
     <div className="node-side-panel">
       <h3>Node creation</h3>
 
-      <label for="name">Name:</label>
-      <br />
-      <input
-        type="text"
-        id='new-node-name'
-        name="name"
-        placeholder="Short and unique identifier"
-        onChange={ (event) => setName(event.target.value) }
-        value={name}
-      />
-      <br />
-      <br />
-
-      <label for="desc">Description:</label>
-      <br />
-      <input
-        type="text"
-        id='new-node-desc'
-        name="desc"
-        placeholder="Long human-readable description"
-        onChange={ (event) => setDesc(event.target.value) }
-        value={desc}
-      />
+      <label>
+        Name:
+        <br />
+        <input
+          type="text"
+          id='new-node-name'
+          name="name"
+          placeholder="Short and unique identifier"
+          onChange={ (event) => setName(event.target.value) }
+          value={name}
+        />
+      </label>
       <br />
       <br />
 
-      <label for="lambda">Activation function:</label>
-      <br />
-      <input
-        type="text"
-        id='new-node-lambda'
-        name="lambda"
-        placeholder="Lambda expression for aliveness"
-        onChange={ (event) => setCode(event.target.value) }
-        value={code}
-      />
+      <label>
+        Description:
+        <br />
+        <input
+          type="text"
+          id='new-node-desc'
+          name="desc"
+          placeholder="Long human-readable description"
+          onChange={ (event) => setDesc(event.target.value) }
+          value={desc}
+        />
+      </label>
       <br />
       <br />
 
-      <label for="decision">Supporting / countering:</label>
+      <label>
+        Activation function:
+        <br />
+        <input
+          type="text"
+          id='new-node-lambda'
+          name="lambda"
+          placeholder="Lambda expression for aliveness"
+          onChange={ (event) => setCode(event.target.value) }
+          value={code}
+        />
+      </label>
+      <br />
+      <br />
+
+      Supporting / countering:
       <br />
       <input
         type="radio"
