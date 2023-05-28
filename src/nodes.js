@@ -7,6 +7,12 @@
 const defaultX = 100;
 const defaultY = 100;
 
+const colors = {
+  'support': '#66ccff',
+  'counter': '#ff6666',
+  '': undefined,
+}
+
 function createNewNode(reactFlowInstance, name, desc, code, decision) {
 
   // TODO: maybe use directly the node name as the id?
@@ -26,6 +32,9 @@ function createNewNode(reactFlowInstance, name, desc, code, decision) {
     position: {
       x: defaultX,
       y: defaultY
+    },
+    style: {
+      backgroundColor: colors[decision],
     },
     data: {
       label: name,
