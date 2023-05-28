@@ -9,19 +9,22 @@ import {
   useReactFlow
 } from "reactflow";
 import { useState } from "react";
+import {
+  createNewNode,
+  duplicateNode
+} from "../nodes";
 
-function NodeSidePanel() {
+function NodeSidePanel({ onClickUpdate }) {
 
   const reactFlowInstance = useReactFlow();
-
-  const defaultX = 100;
-  const defaultY = 100;
 
   const [selectedNode, setSelectedNode] = useState(null);
   const [name, setName] = useState(selectedNode?.data?.label ?? "");
   const [desc, setDesc] = useState(selectedNode?.data?.desc ?? "");
   const [code, setCode] = useState(selectedNode?.data?.code ?? "");
   const [decision, setDecision] = useState(selectedNode?.data?.decision ?? "");
+
+  const formTitle = (selectedNode === null) ? 'Node creation' : 'Update node ' + selectedNode.id;
 
   // // FIXME: this triggers two re-renders of this component when selecting a node.
   useOnSelectionChange({
@@ -48,26 +51,23 @@ function NodeSidePanel() {
     //   - name must not already exist in the list of nodes;
     //   - at least one of the radio buttons must be checked.
 
-    const newNode = {
-      id: name,
-      position: {
-        x: defaultX,
-        y: defaultY
-      },
-      data: {
-        label: name,
-        desc: desc,
-        code: code,
-        decision: decision
-      }
-    }
+    createNewNode(reactFlowInstance, name, desc, code, decision);
+  }
 
-    reactFlowInstance.addNodes(newNode);
+  const onClickUpdateNode = (params) => {
+    // Using the `reactFlowInstance.setNodes` does not seem to work...
+    // Instead, we rely on a callback provided by the parent component,
+    // which internally calls the `setNodes` directly from the `useInitialNodes`.
+    onClickUpdate(selectedNode, name, desc, code, decision);
+  }
+
+  const onClickDuplicateNode = (params) => {
+    duplicateNode(reactFlowInstance, selectedNode);
   }
 
   return (
     <div className="node-side-panel">
-      <h3>Node creation</h3>
+      <h3>{formTitle}</h3>
 
       <label>
         Name:
@@ -148,7 +148,9 @@ function NodeSidePanel() {
       <br />
       <br />
 
-      <button id='new-node-submit' onClick={onClickNewNode} >Add new node</button>
+      {!selectedNode && <button onClick={onClickNewNode} >Add new node</button>}
+      {selectedNode && <button onClick={onClickUpdateNode}>Update node</button>}
+      {selectedNode && <button onClick={onClickDuplicateNode}>Duplicate node</button>}
     </div>
   );
 
