@@ -27,7 +27,13 @@ function App() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
-  const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), [setEdges]);
+  const onConnect = useCallback((newEdge) => {
+    // We want a marker at the end of an edge to indicate the attack direction.
+    newEdge.markerEnd = {
+      type: 'arrowclosed',
+    };
+    setEdges((eds) => addEdge(newEdge, eds))
+  }, [setEdges]);
 
   const onClickUpdate = (currentNode, newName, newDesc, newCode, newDecision) => {
     setNodes((existingNodes) =>
