@@ -12,6 +12,7 @@ import ReactFlow, {
 
 import 'reactflow/dist/style.css';
 import NodeSidePanel from "./components/NodeSidePanel";
+import ImportExportPanel from "./components/ImportExportPanel";
 
 const initialNodes = [
   { id: '1', position: { x: 0, y: 0 }, data: { label: 'First node' } },
@@ -71,6 +72,7 @@ function App() {
           </ReactFlow>
         </div>
         <div id="sidebar-column" style={{ flex: 2 }}>
+          <ImportExportPanel />
           <NodeSidePanel onClickUpdate={onClickUpdate} />
         </div>
       </ReactFlowProvider>
