@@ -4,8 +4,18 @@
   graphs from the same formats.
  */
 
-import {useReactFlow} from "reactflow";
+import {
+  getRectOfNodes,
+  getTransformForBounds,
+  useReactFlow
+} from "reactflow";
 import exportToPython from "../python_export";
+import {toBlob} from "html-to-image";
+
+const Buffer = require('buffer/').Buffer;
+const pngExtract = require('png-chunks-extract');
+const pngEncode = require('png-chunks-encode');
+const pngText = require('png-chunk-text');
 
 
 /*
@@ -49,6 +59,40 @@ function ImportExportPanel() {
     downloadFile(code, 'application/python', 'judge.py');
   };
 
+  const onClickExportToPng = (params) => {
+    // Variables for the PNG itself
+    const imageWidth = 1024;
+    const imageHeight = 768;
+    const nodes = reactFlowInstance.getNodes();
+    const nodesBounds = getRectOfNodes(nodes);
+    const nodesTransforms = getTransformForBounds(nodesBounds, imageWidth, imageHeight, 1.0, 1.0);
+
+    // Variables for the argumentation graph embedded within the PNG
+    const edges = reactFlowInstance.getEdges();
+    const graphSerialized = JSON.stringify({ nodes, edges });
+
+    toBlob(document.querySelector('.react-flow__viewport'), {
+      width: imageWidth,
+      height: imageHeight,
+      style: {
+        width: imageWidth,
+        height: imageHeight,
+        transform: `translate(${nodesTransforms[0]}px, ${nodesTransforms[1]}px) scale(${nodesTransforms[2]})`,
+      },
+      type: 'image/png',
+    }).then( (pngBlob) => {
+      return pngBlob.arrayBuffer();
+    }).then( (pngBuffer) => {
+      pngBuffer = Buffer.from(pngBuffer);
+      let chunks = pngExtract(pngBuffer);
+      const newChunk = pngText.encode('argumentation-graph', graphSerialized);
+      // Add the new chunk just before the end of the PNG file
+      chunks.splice(-1, 0, newChunk);
+      pngBuffer = pngEncode(chunks);
+      downloadFile(pngBuffer, 'image/png', 'judge.png');
+    });
+  }
+
   return (
     <div className="import-export-panel">
       <h3>Import / Export graph</h3>
@@ -59,7 +103,8 @@ function ImportExportPanel() {
       <button onClick={onClickExportToPython}>Export graph to Python...</button>
       <br />
 
-      {/*<button onClick={}>Export graph to PNG...</button><br />*/}
+      <button onClick={onClickExportToPng}>Export graph to PNG...</button>
+      <br />
     </div>
   );
 
