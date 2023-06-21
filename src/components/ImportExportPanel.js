@@ -10,6 +10,7 @@ import {
   exportToJson,
   exportToPng,
   importFromJson,
+  importFromPython,
 } from "../serialization";
 
 
@@ -71,11 +72,17 @@ function ImportExportPanel() {
     }
     const file = event.target.files[0];
 
-    let importFunction;
-    if (file.type === 'application/json') importFunction = importFromJson;
-    else if (file.type === 'application/python') importFunction = null;
-    else if (file.type === 'image/png') importFunction = null;
-    else return; // Unrecognized file type
+    const fileTypesToImportFunction = {
+      'application/json': importFromJson,
+      'application/python': importFromPython,
+      'text/x-python-script': importFromPython,
+      'image/png': null,
+    }
+    const importFunction = fileTypesToImportFunction[file.type];
+    if (importFunction === undefined) {
+      // Unrecognized file type
+      return;
+    }
 
     file.text().then( (fileContent) => {
       const { nodes, edges } = importFunction(fileContent);
@@ -105,7 +112,7 @@ function ImportExportPanel() {
           type="file"
           name="import_file"
           onChange={onClickImport}
-          accept=".json,.python,.png,application/json,application/python,imge/png"
+          accept=".json,.py,.png,application/json,application/python,imge/png"
         />
       </label>
       <br />

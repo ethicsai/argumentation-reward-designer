@@ -173,9 +173,26 @@ function importFromJson(jsonSerialized) {
 }
 
 
+function importFromPython(pythonCode) {
+  // The Python code contains a few lines that enclose the JSON-serialized
+  // graph. We cannot directly import from the Python code itself, we must
+  // retrieve this JSON serialization instead.
+  const lines = pythonCode.split('\n');
+  const startIndex = lines.indexOf('### BEGIN ARGUMENTATION GRAPH ###');
+  const endIndex = lines.indexOf('### END ARGUMENTATION GRAPH ###');
+
+  const startJsonIndex = lines.indexOf('"""', startIndex) + 1;
+  const endJsonIndex = endIndex - 1;
+  const jsonLines = lines.slice(startJsonIndex, endJsonIndex);
+
+  return JSON.parse(jsonLines.join('\n'));
+}
+
+
 export {
   exportToPython,
   exportToJson,
   exportToPng,
   importFromJson,
+  importFromPython,
 };
