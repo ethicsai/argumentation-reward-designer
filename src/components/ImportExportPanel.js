@@ -11,6 +11,7 @@ import {
   exportToPng,
   importFromJson,
   importFromPython,
+  importFromPng,
 } from "../serialization";
 
 
@@ -76,7 +77,7 @@ function ImportExportPanel() {
       'application/json': importFromJson,
       'application/python': importFromPython,
       'text/x-python-script': importFromPython,
-      'image/png': null,
+      'image/png': importFromPng,
     }
     const importFunction = fileTypesToImportFunction[file.type];
     if (importFunction === undefined) {
@@ -84,8 +85,7 @@ function ImportExportPanel() {
       return;
     }
 
-    file.text().then( (fileContent) => {
-      const { nodes, edges } = importFunction(fileContent);
+    importFunction(file).then( ({ nodes, edges }) => {
       reactFlowInstance.setNodes(nodes);
       reactFlowInstance.setEdges(edges);
     });

@@ -168,12 +168,14 @@ async function exportToPng(nodes, edges, imageWidth = 1024, imageHeight = 768) {
 }
 
 
-function importFromJson(jsonSerialized) {
+async function importFromJson(file) {
+  const jsonSerialized = await file.text();
   return JSON.parse(jsonSerialized);
 }
 
 
-function importFromPython(pythonCode) {
+async function importFromPython(file) {
+  const pythonCode = await file.text();
   // The Python code contains a few lines that enclose the JSON-serialized
   // graph. We cannot directly import from the Python code itself, we must
   // retrieve this JSON serialization instead.
@@ -189,10 +191,29 @@ function importFromPython(pythonCode) {
 }
 
 
+async function importFromPng(file) {
+  let pngBuffer = await file.arrayBuffer();
+  pngBuffer = Buffer.from(pngBuffer);
+  const chunks = pngExtract(pngBuffer);
+  // We are interested in a single chunk, a textual one with a specific keyword
+  const graphChunk = chunks
+    .filter( (chunk) => chunk.name === 'tEXt')
+    .map( (chunk) => pngText.decode(chunk.data) )
+    .filter( (chunk) => chunk.keyword === PNG_CHUNK_KEYWORD);
+  if (graphChunk.length === 0) {
+    // We have not found the corresponding chunk, there is a problem!
+    throw new Error('Could not find the argumentation graph in the PNG file!');
+  }
+  const graphJson = graphChunk[0].text;
+  return JSON.parse(graphJson);
+}
+
+
 export {
   exportToPython,
   exportToJson,
   exportToPng,
   importFromJson,
   importFromPython,
+  importFromPng,
 };
