@@ -15,12 +15,9 @@ import NodeSidePanel from "./components/NodeSidePanel";
 import ImportExportPanel from "./components/ImportExportPanel";
 
 const initialNodes = [
-  { id: '1', position: { x: 0, y: 0 }, data: { label: 'First node' } },
-  { id: '2', position: { x: 0, y: 100 }, data: { label: 'Second node' } },
 ];
 
 const initialEdges = [
-  { id: 'e1-2', source: '1', target: '2' }
 ];
 
 function App() {
