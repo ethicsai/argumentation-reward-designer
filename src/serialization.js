@@ -167,8 +167,15 @@ async function exportToPng(nodes, edges, imageWidth = 1024, imageHeight = 768) {
   return pngBuffer;
 }
 
+
+function importFromJson(jsonSerialized) {
+  return JSON.parse(jsonSerialized);
+}
+
+
 export {
   exportToPython,
   exportToJson,
-  exportToPng
+  exportToPng,
+  importFromJson,
 };

@@ -8,7 +8,8 @@ import { useReactFlow } from "reactflow";
 import {
   exportToPython,
   exportToJson,
-  exportToPng
+  exportToPng,
+  importFromJson,
 } from "../serialization";
 
 
@@ -60,7 +61,27 @@ function ImportExportPanel() {
 
     exportToPng(nodes, edges).then( png => {
       downloadFile(png, 'image/png', 'judge.png');
-    })
+    });
+  }
+
+  const onClickImport = (event) => {
+    if (event.target.files.length === 0) {
+      // No file was selected, do nothing
+      return;
+    }
+    const file = event.target.files[0];
+
+    let importFunction;
+    if (file.type === 'application/json') importFunction = importFromJson;
+    else if (file.type === 'application/python') importFunction = null;
+    else if (file.type === 'image/png') importFunction = null;
+    else return; // Unrecognized file type
+
+    file.text().then( (fileContent) => {
+      const { nodes, edges } = importFunction(fileContent);
+      reactFlowInstance.setNodes(nodes);
+      reactFlowInstance.setEdges(edges);
+    });
   }
 
   return (
@@ -74,6 +95,19 @@ function ImportExportPanel() {
       <br />
 
       <button onClick={onClickExportToPng}>Export graph to PNG...</button>
+      <br />
+      <br />
+
+      <label>
+        Import from file (JSON, Python, PNG):
+        <br />
+        <input
+          type="file"
+          name="import_file"
+          onChange={onClickImport}
+          accept=".json,.python,.png,application/json,application/python,imge/png"
+        />
+      </label>
       <br />
     </div>
   );
