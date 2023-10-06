@@ -13,6 +13,12 @@ import ReactFlow, {
 import 'reactflow/dist/style.css';
 import NodeSidePanel from "./components/NodeSidePanel";
 import ImportExportPanel from "./components/ImportExportPanel";
+import CustomNode from "./components/CustomNode";
+
+
+const nodeTypes = {
+  default: CustomNode,
+};
 
 const initialNodes = [
 ];
@@ -63,6 +69,7 @@ function App() {
             onEdgesChange={onEdgesChange}
             onConnect={onConnect}
             fitView
+            nodeTypes={nodeTypes}
           >
             <Controls />
             <Background variant="dots" gap={12} size={1} />

@@ -29,6 +29,7 @@ function createNewNode(reactFlowInstance, name, desc, code, decision) {
 
   const newNode = {
     id: String(newId),
+    // type: 'default',
     position: {
       x: defaultX,
       y: defaultY

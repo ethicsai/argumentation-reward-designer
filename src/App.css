@@ -1,0 +1,19 @@
+.node {
+
+}
+
+.node .node-name {
+    font-weight: bold;
+}
+
+.node .node-desc {
+    font-style: italic;
+}
+
+.node .node-code {
+    white-space: pre-wrap;
+}
+
+.node-tooltip .node-tooltip-desc {
+    font-style: italic;
+}
