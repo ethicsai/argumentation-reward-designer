@@ -1,23 +1,24 @@
-import {
-  getRectOfNodes,
-  getTransformForBounds
-} from "reactflow";
-import { toBlob } from "html-to-image";
-const Buffer = require('buffer/').Buffer;
-const pngExtract = require('png-chunks-extract');
-const pngEncode = require('png-chunks-encode');
-const pngText = require('png-chunk-text');
+import { exportToJson } from './json';
 
 
-/*
-  Escape text to use in Python literal strings, enclosed with single quotes
-  (`'`). This means that we must escape single quotes, and backslashes.
+/**
+ * Escape text to use in Python literal strings.
+ *
+ * It escapes single quotes and backslashes, so that it does not break literal
+ * strings enclosed with single quotes.
+ * @param text The text to escape.
+ * @return {string} The same text, with single quotes and backslashes escaped.
  */
 function escapePythonLiteralString(text) {
   return text.replaceAll("'", "\\'").replaceAll("\\", "\\\\");
 }
 
 
+/**
+ * Export an argument as Python code.
+ * @param node The node representing the argument that we want to export.
+ * @return {string} The Python code that will create this argument when executed.
+ */
 function exportArgumentToPython(node) {
   // The name must exist, we must escape it, and enclose it within quotes.
   const name = `'${escapePythonLiteralString(node.data.name)}'`;
@@ -63,6 +64,13 @@ afdm.add_argument(Argument(
 }
 
 
+/**
+ * Export an attack between two arguments as Python code.
+ * @param edge The edge (attack) we want to export.
+ * @param nodesIdToName The map between nodes id and their names, because the
+ *  edges use only nodes' IDs, but we want to export the nodes' names in Python.
+ * @return {string} The Python code that will create this attack when executed.
+ */
 function exportAttackToPython(edge, nodesIdToName) {
   const attacker = nodesIdToName[edge.source];
   const attacked = nodesIdToName[edge.target];
@@ -70,6 +78,19 @@ function exportAttackToPython(edge, nodesIdToName) {
 }
 
 
+/**
+ * Export an argumentation graph to Python code.
+ * @param nodes The graph nodes, obtained via `reactFlowInstance.getNodes()`.
+ * @param edges The graph edges, obtained via `reactFlowInstance.getEdges()`.
+ * @param addJson (Optional) Boolean indicating whether to include the
+ *  JSON export to the Python code. It is used to allow importing back from
+ *  the Python code, because it is easier to parse JSON than Python code.
+ *  The JSON will be embedded in a multiline string that has no impact on
+ *  the rest of the Python code.
+ * @return {string} The textual representation of the Python code that will
+ *  create the same argumentation graph when executed. This Python code relies
+ *  on the AFDM library, and assumes it will be used.
+ */
 function exportToPython(nodes, edges, addJson = false) {
 
   let code = `
@@ -120,60 +141,16 @@ ${exportToJson(nodes, edges, true)}
 }
 
 
-const PNG_CHUNK_KEYWORD = 'judge-argumentation-graph';
-
-
-/*
- * Export a graph (nodes and edges) to JSON.
- * The parameter `spacing` controls whether to use whitespace (and breaking lines).
+/**
+ * Import an argumentation graph from a file containing Python code.
+ *
+ * This only works if the Python code was exported with the JSON representation
+ * included (see parameter `addJson` in `exportToPython`.
+ * @param file The path to the desired file.
+ * @return {Promise<any>} A promise that will resolve to an object with two
+ *  child (`nodes` and `edges`), parsed from the JSON embedded within the Python
+ *  code.
  */
-function exportToJson(nodes, edges, spacing = false) {
-  const space = (spacing) ? 2 : null;
-  return JSON.stringify({ nodes, edges }, null, space);
-}
-
-
-async function exportToPng(nodes, edges, imageWidth = 1024, imageHeight = 768) {
-  // Variables for the PNG itself
-  const nodesBounds = getRectOfNodes(nodes);
-  const nodesTransforms = getTransformForBounds(nodesBounds, imageWidth, imageHeight, 1.0, 1.0);
-
-  // Variable for the argumentation graph embedded within the PNG
-  const graphSerialized = exportToJson(nodes, edges, false);
-
-  // Transform the ReactFlow Viewport into an image (returns a Blob).
-  const pngBlob = await toBlob(document.querySelector('.react-flow__viewport'), {
-    width: imageWidth,
-    height: imageHeight,
-    style: {
-      width: imageWidth,
-      height: imageHeight,
-      transform: `translate(${nodesTransforms[0]}px, ${nodesTransforms[1]}px) scale(${nodesTransforms[2]})`,
-    },
-    type: 'image/png',
-  });
-
-  // The png-chunks-extract library requires a buffer instead of a Blob.
-  let pngBuffer = await pngBlob.arrayBuffer();
-  pngBuffer = Buffer.from(pngBuffer);
-  // Extract all chunks from the PNG: this represents the internal code of the PNG.
-  let chunks = pngExtract(pngBuffer);
-  // We create a new chunk that contains the JSON-serialized graph, encoded for PNG.
-  const newChunk = pngText.encode(PNG_CHUNK_KEYWORD, graphSerialized);
-  // Add the new chunk just before the end of the PNG file.
-  chunks.splice(-1, 0, newChunk);
-  // Re-encode the PNG with the new chunks, and return it.
-  pngBuffer = pngEncode(chunks);
-  return pngBuffer;
-}
-
-
-async function importFromJson(file) {
-  const jsonSerialized = await file.text();
-  return JSON.parse(jsonSerialized);
-}
-
-
 async function importFromPython(file) {
   const pythonCode = await file.text();
   // The Python code contains a few lines that enclose the JSON-serialized
@@ -191,29 +168,7 @@ async function importFromPython(file) {
 }
 
 
-async function importFromPng(file) {
-  let pngBuffer = await file.arrayBuffer();
-  pngBuffer = Buffer.from(pngBuffer);
-  const chunks = pngExtract(pngBuffer);
-  // We are interested in a single chunk, a textual one with a specific keyword
-  const graphChunk = chunks
-    .filter( (chunk) => chunk.name === 'tEXt')
-    .map( (chunk) => pngText.decode(chunk.data) )
-    .filter( (chunk) => chunk.keyword === PNG_CHUNK_KEYWORD);
-  if (graphChunk.length === 0) {
-    // We have not found the corresponding chunk, there is a problem!
-    throw new Error('Could not find the argumentation graph in the PNG file!');
-  }
-  const graphJson = graphChunk[0].text;
-  return JSON.parse(graphJson);
-}
-
-
 export {
   exportToPython,
-  exportToJson,
-  exportToPng,
-  importFromJson,
   importFromPython,
-  importFromPng,
 };
