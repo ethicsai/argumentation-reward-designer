@@ -2,6 +2,12 @@ import { memo, useState } from 'react';
 import {Position, NodeToolbar, Handle} from 'reactflow';
 
 
+const nodesBackgroundColors = {
+  'support': '#66ccff',
+  'counter': '#ff6666',
+  '': undefined,
+}
+
 /*
   This function truncates the description to a maximum number of characters;
   if the description is longer, only the first `maxChars` characters are
@@ -28,6 +34,9 @@ const CustomNode = ({ data }) => {
       className='node'
       onMouseEnter={() => setVisible(true)}
       onMouseLeave={() => setVisible(false)}
+      style={{
+        backgroundColor: nodesBackgroundColors[data.decision ?? '']
+      }}
     >
       <NodeToolbar isVisible={isVisible} position={toolbarPosition}>
         <div className='node-tooltip'>
@@ -35,7 +44,7 @@ const CustomNode = ({ data }) => {
           <br />
         </div>
       </NodeToolbar>
-      <div className='node'>
+      <div className='node-content'>
         <span className='node-name'>{data.label}</span>
         <br />
         <span className='node-desc'>{truncateDescription(data.desc)}</span>

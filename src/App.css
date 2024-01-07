@@ -1,5 +1,15 @@
-.node {
+.react-flow__node-default {
+    /* Disable the padding so that the node content can take up all size, and
+    we can render the style (especially background color) directly in this
+    content (`CustomNode`). */
+    padding: 0 !important;
+}
 
+.node {
+    /* This class represents the direct children of a node, i.e., its content.
+    Because we disabled the padding above, we must re-set it here, so that
+    the title, description, etc., will still be padded. */
+    padding: 10px;
 }
 
 .node .node-name {
