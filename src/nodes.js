@@ -42,8 +42,23 @@ function createNewNode(reactFlowInstance, name, desc, code, decision) {
 }
 
 function duplicateNode(reactFlowInstance, node) {
+  // We must first create a new name to avoid having duplicates (names should
+  // be unique). We simply append `-X` to the end of the name, where `X` is
+  // incremented until no other name exists with the same name.
+  // This means that we can duplicate a node `a` to get `a-1`, then re-duplicate
+  // `a` again to get `a-2`, and so on.
+  let newName = node?.data?.name ?? 'argument';
+  const existingNames = new Set(reactFlowInstance.getNodes()
+    .map(
+      node => node?.data?.name ?? ""
+    ).filter(
+    name => name.startsWith(newName)
+  ));
+  let i;
+  for (i = 1; existingNames.has(newName + '-' + i); ++i) {}
+  // Create the new node with the exact same data, except for the name.
   createNewNode(reactFlowInstance,
-    node?.data?.name,
+    newName + '-' + i,
     node?.data?.desc,
     node?.data?.code,
     node?.data?.decision);
