@@ -1,7 +1,8 @@
 /*
   This file defines some manipulations on nodes:
-  - Adding new nodes;
+  - Adding new nodes.
   - Duplicating nodes.
+  - Updating an existing node.
  */
 
 import { randomJitter } from "./utils/random";
@@ -45,6 +46,7 @@ function createNewNode(reactFlowInstance, name, desc, code, decision) {
   reactFlowInstance.addNodes(newNode);
 }
 
+
 function duplicateNode(reactFlowInstance, node) {
   // We must first create a new name to avoid having duplicates (names should
   // be unique). We simply append `-X` to the end of the name, where `X` is
@@ -68,7 +70,29 @@ function duplicateNode(reactFlowInstance, node) {
     node?.data?.decision);
 }
 
+
+function updateNode(reactFlowInstance, nodeToUpdate, newName, newDesc, newCode, newDecision) {
+  reactFlowInstance.setNodes((existingNodes) =>
+    existingNodes.map((node) => {
+      if (node.id === nodeToUpdate.id) {
+        // We need to create a new object to notify ReactFlow about the change.
+        node.data = {
+          ...node.data,
+          label: newName,
+          name: newName,
+          desc: newDesc,
+          code: newCode,
+          decision: newDecision
+        };
+      }
+      return node;
+    })
+  );
+}
+
+
 export {
   createNewNode,
   duplicateNode,
+  updateNode,
 };

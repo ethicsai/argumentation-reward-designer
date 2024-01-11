@@ -39,25 +39,6 @@ function App() {
     setEdges((eds) => addEdge(newEdge, eds))
   }, [setEdges]);
 
-  const onClickUpdate = (currentNode, newName, newDesc, newCode, newDecision) => {
-    setNodes((existingNodes) =>
-      existingNodes.map((node) => {
-        if (node.id === currentNode.id) {
-          // We need to create a new object to notify ReactFlow about the change.
-          node.data = {
-            ...node.data,
-            label: newName,
-            name: newName,
-            desc: newDesc,
-            code: newCode,
-            decision: newDecision
-          };
-        }
-        return node;
-      })
-    );
-  };
-
   return (
     <div id="container" style={{ width: '100vw', height: '100vh', display: 'flex' }}>
       <ReactFlowProvider>
@@ -77,7 +58,7 @@ function App() {
         </div>
         <div id="sidebar-column" style={{ flex: 2 }}>
           <ImportExportPanel />
-          <NodeSidePanel onClickUpdate={onClickUpdate} />
+          <NodeSidePanel />
         </div>
       </ReactFlowProvider>
     </div>

@@ -10,7 +10,8 @@ import {
 import { useState } from "react";
 import {
   createNewNode,
-  duplicateNode
+  duplicateNode,
+  updateNode,
 } from "../nodes";
 import {
   Button, FormControl, FormControlLabel, FormHelperText, FormLabel,
@@ -23,7 +24,7 @@ import {
   CustomizedAccordion, CustomizedAccordionDetails, CustomizedAccordionSummary
 } from "./Accordion";
 
-function NodeSidePanel({ onClickUpdate }) {
+function NodeSidePanel() {
 
   const reactFlowInstance = useReactFlow();
 
@@ -101,10 +102,7 @@ function NodeSidePanel({ onClickUpdate }) {
   const onClickUpdateNode = (params) => {
     if (validateForm(selectedNode)) {
       resetErrors();
-      // Using the `reactFlowInstance.setNodes` does not seem to work...
-      // Instead, we rely on a callback provided by the parent component,
-      // which internally calls the `setNodes` directly from the `useInitialNodes`.
-      onClickUpdate(selectedNode, name, desc, code, decision);
+      updateNode(reactFlowInstance, selectedNode, name, desc, code, decision);
     }
   }
 
