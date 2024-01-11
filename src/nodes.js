@@ -4,6 +4,8 @@
   - Duplicating nodes.
  */
 
+import { randomJitter } from "./utils/random";
+
 const defaultX = 100;
 const defaultY = 100;
 
@@ -26,8 +28,10 @@ function createNewNode(reactFlowInstance, name, desc, code, decision) {
     id: String(newId),
     // type: 'default',
     position: {
-      x: defaultX,
-      y: defaultY
+      // We add some jitter around the default X/Y to avoid creating nodes at
+      // the exact same position (thus hiding each other).
+      x: defaultX + randomJitter(),
+      y: defaultY + randomJitter(),
     },
     data: {
       label: name,
