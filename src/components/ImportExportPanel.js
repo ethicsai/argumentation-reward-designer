@@ -4,6 +4,7 @@
   graphs from the same formats.
  */
 
+import { useState } from "react";
 import { useReactFlow } from "reactflow";
 import {
   exportToPython,
@@ -13,6 +14,16 @@ import {
   importFromPython,
   importFromPng,
 } from "../serialization";
+import {
+  Button, Checkbox, FormControlLabel, Typography
+} from "@mui/material";
+import {
+  FileDownload, FileUpload
+} from "@mui/icons-material";
+import {
+  CustomizedAccordion, CustomizedAccordionDetails, CustomizedAccordionSummary
+} from "./Accordion";
+import DropdownButton from "./DropdownButton";
 
 
 /*
@@ -40,7 +51,9 @@ function ImportExportPanel() {
 
   const reactFlowInstance = useReactFlow();
 
-  const onClickExportToJSON = (params) => {
+  const [shouldExportJson, setShouldExportJson] = useState(true);
+
+  const onClickExportToJSON = () => {
     const nodes = reactFlowInstance.getNodes();
     const edges = reactFlowInstance.getEdges();
 
@@ -48,16 +61,15 @@ function ImportExportPanel() {
     downloadFile(serialized, 'application/json', 'judge.json');
   };
 
-  const onClickExportToPython = (params) => {
+  const onClickExportToPython = () => {
     const nodes = reactFlowInstance.getNodes();
     const edges = reactFlowInstance.getEdges();
-    const addJson = true; // TODO: create a checkbox
 
-    const code = exportToPython(nodes, edges, addJson);
+    const code = exportToPython(nodes, edges, shouldExportJson);
     downloadFile(code, 'application/python', 'judge.py');
   };
 
-  const onClickExportToPng = (params) => {
+  const onClickExportToPng = () => {
     const nodes = reactFlowInstance.getNodes();
     const edges = reactFlowInstance.getEdges();
 
@@ -93,29 +105,69 @@ function ImportExportPanel() {
 
   return (
     <div className="import-export-panel">
-      <h3>Import / Export graph</h3>
-
-      <button onClick={onClickExportToJSON}>Export graph to JSON...</button>
-      <br />
-
-      <button onClick={onClickExportToPython}>Export graph to Python...</button>
-      <br />
-
-      <button onClick={onClickExportToPng}>Export graph to PNG...</button>
-      <br />
-      <br />
-
-      <label>
-        Import from file (JSON, Python, PNG):
-        <br />
-        <input
-          type="file"
-          name="import_file"
-          onChange={onClickImport}
-          accept=".json,.py,.png,application/json,application/python,imge/png"
-        />
-      </label>
-      <br />
+      <CustomizedAccordion expanded={false}>
+        <CustomizedAccordionSummary
+          aria-controls="import-panel-content"
+          id="import-panel-header"
+        >
+          <Typography variant="h6">
+            Import / export graph
+          </Typography>
+        </CustomizedAccordionSummary>
+        <CustomizedAccordionDetails>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={shouldExportJson}
+                onChange={(event) => setShouldExportJson(!shouldExportJson)}
+              />
+            }
+            label="Include JSON in exports"
+          />
+          <DropdownButton
+            startIcon={<FileDownload />}
+            buttonTitle="Export to Python"
+            menuItems={[
+              {
+                label: 'Export to PNG',
+                disabled: false,
+                onClick: (event, index, item) => onClickExportToPng()
+              },
+              {
+                label: 'Export to JSON',
+                disabled: false,
+                onClick: (event, index, item) => onClickExportToJSON()
+              },
+            ]}
+            handleClick={(event, index, item) => onClickExportToPython()}
+          />
+          <br />
+          <br />
+          <Button
+            variant="outlined"
+            component="label"
+            startIcon={<FileUpload />}
+          >
+            Import from file
+            <input
+              type="file"
+              style={{
+                clip: 'rect(0 0 0 0)',
+                clipPath: 'inset(50%)',
+                height: 1,
+                overflow: 'hidden',
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                whiteSpace: 'nowrap',
+                width: 1,
+              }}
+              onChange={onClickImport}
+              accept=".json,.py,.png,application/json,application/python,imge/png"
+            />
+          </Button>
+        </CustomizedAccordionDetails>
+      </CustomizedAccordion>
     </div>
   );
 
