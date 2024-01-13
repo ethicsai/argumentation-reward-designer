@@ -13,6 +13,7 @@ import ReactFlow, {
 import 'reactflow/dist/style.css';
 import NodeSidePanel from "./components/NodeSidePanel";
 import ImportExportPanel from "./components/ImportExportPanel";
+import SaveLoadPanel from "./components/SaveLoadPanel";
 import CustomNode from "./components/CustomNode";
 
 
@@ -57,8 +58,9 @@ function App() {
           </ReactFlow>
         </div>
         <div id="sidebar-column" style={{ flex: 2 }}>
-          <ImportExportPanel />
           <NodeSidePanel />
+          <ImportExportPanel />
+          <SaveLoadPanel />
         </div>
       </ReactFlowProvider>
     </div>
