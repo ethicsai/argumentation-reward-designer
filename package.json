@@ -12,6 +12,7 @@
     "@testing-library/user-event": "^13.5.0",
     "buffer": "^6.0.3",
     "html-to-image": "^1.11.11",
+    "notistack": "^3.0.1",
     "png-chunk-text": "^1.0.0",
     "png-chunks-encode": "^1.0.0",
     "png-chunks-extract": "^1.0.0",

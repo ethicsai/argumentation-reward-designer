@@ -9,6 +9,7 @@ import ReactFlow, {
   addEdge,
   ReactFlowProvider,
 } from 'reactflow';
+import { SnackbarProvider } from "notistack";
 
 import 'reactflow/dist/style.css';
 import NodeSidePanel from "./components/NodeSidePanel";
@@ -43,25 +44,27 @@ function App() {
   return (
     <div id="container" style={{ width: '100vw', height: '100vh', display: 'flex' }}>
       <ReactFlowProvider>
-        <div id="main-column" style={{ flex: 8 }}>
-          <ReactFlow
-            nodes={nodes}
-            edges={edges}
-            onNodesChange={onNodesChange}
-            onEdgesChange={onEdgesChange}
-            onConnect={onConnect}
-            fitView
-            nodeTypes={nodeTypes}
-          >
-            <Controls />
-            <Background variant="dots" gap={12} size={1} />
-          </ReactFlow>
-        </div>
-        <div id="sidebar-column" style={{ flex: 2 }}>
-          <NodeSidePanel />
-          <ImportExportPanel />
-          <SaveLoadPanel />
-        </div>
+        <SnackbarProvider maxSnack={3}>
+          <div id="main-column" style={{flex: 8}}>
+            <ReactFlow
+              nodes={nodes}
+              edges={edges}
+              onNodesChange={onNodesChange}
+              onEdgesChange={onEdgesChange}
+              onConnect={onConnect}
+              fitView
+              nodeTypes={nodeTypes}
+            >
+              <Controls/>
+              <Background variant="dots" gap={12} size={1}/>
+            </ReactFlow>
+          </div>
+          <div id="sidebar-column" style={{flex: 2}}>
+            <NodeSidePanel/>
+            <ImportExportPanel/>
+            <SaveLoadPanel/>
+          </div>
+        </SnackbarProvider>
       </ReactFlowProvider>
     </div>
   );
