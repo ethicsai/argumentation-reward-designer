@@ -1,70 +1,35 @@
-# Getting Started with Create React App
+# Argumentation Reward Designer
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This tool helps to create argumentation graphs that represent reward functions
+for learning moral values in a reinforcement learning algorithm.
 
-## Available Scripts
+It is meant to work in conjunction with the 
+[ethical-smartgrid](https://github.com/ethicsai/ethical-smart-grid) simulator:
+the Python code this tool produces can be (almost) directly used to create
+reward functions that work with the Ethical Smartgrid simulator.
 
-In the project directory, you can run:
+The idea of using argumentation graphs that represent reward functions is
+described in our paper:
 
-### `npm start`
+> Benoît Alcaraz, Olivier Boissier, Rémy Chaput, and Christopher Leturc. 2023.
+> AJAR: An Argumentation-based Judging Agents Framework for Ethical Reinforcement
+> Learning. In Proceedings of the 2023 International Conference on Autonomous
+> Agents and Multiagent Systems (AAMAS '23). International Foundation for
+> Autonomous Agents and Multiagent Systems, Richland, SC, 2427–2429.
+> [DOI: 10.5555/3545946.3598956](https://dl.acm.org/doi/10.5555/3545946.3598956)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```bibtex
+@inproceedings{10.5555/3545946.3598956,
+    author = {Alcaraz, Beno\^{\i}t and Boissier, Olivier and Chaput, R\'{e}my and Leturc, Christopher},
+    title = {AJAR: An Argumentation-Based Judging Agents Framework for Ethical Reinforcement Learning},
+    year = {2023},
+    isbn = {9781450394321},
+    publisher = {International Foundation for Autonomous Agents and Multiagent Systems},
+    address = {Richland, SC},
+    booktitle = {Proceedings of the 2023 International Conference on Autonomous Agents and Multiagent Systems},
+    pages = {2427–2429},
+    numpages = {3},
+    location = {London, United Kingdom},
+    series = {AAMAS '23}
+}
+```
