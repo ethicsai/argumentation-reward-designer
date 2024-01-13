@@ -15,7 +15,7 @@ import {
   importFromPng,
 } from "../serialization";
 import {
-  Button, Checkbox, FormControlLabel, Typography
+  Button, Checkbox, FormControlLabel, Tooltip, Typography
 } from "@mui/material";
 import {
   FileDownload, FileUpload
@@ -110,20 +110,29 @@ function ImportExportPanel() {
           aria-controls="import-panel-content"
           id="import-panel-header"
         >
-          <Typography variant="h6">
-            Import / export graph
-          </Typography>
+          <Tooltip title="Use this panel to export your graph as a usable file
+          that you can share with others, or use in your Python code.">
+            <Typography variant="h6">
+              Import / export graph
+            </Typography>
+          </Tooltip>
         </CustomizedAccordionSummary>
         <CustomizedAccordionDetails>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={shouldExportJson}
-                onChange={(event) => setShouldExportJson(!shouldExportJson)}
-              />
-            }
-            label="Include JSON in exports"
-          />
+          <Tooltip title="If checked, a JSON representation of the graph will
+          be included in the Python export. This has no impact on the Python
+          code itself, but makes the file longer. Because a Python file can
+          only be imported into this application if it has the JSON export,
+          it is strongly recommended to leave this option on.">
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={shouldExportJson}
+                  onChange={(event) => setShouldExportJson(!shouldExportJson)}
+                />
+              }
+              label="Include JSON in exports"
+            />
+          </Tooltip>
           <DropdownButton
             startIcon={<FileDownload />}
             buttonTitle="Export to Python"

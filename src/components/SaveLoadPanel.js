@@ -7,7 +7,7 @@ import {
   CustomizedAccordion, CustomizedAccordionDetails, CustomizedAccordionSummary
 } from "./Accordion";
 import {
-  Autocomplete, Button, createFilterOptions, TextField, Typography
+  Autocomplete, Button, createFilterOptions, TextField, Tooltip, Typography
 } from "@mui/material";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import { DeleteOutline, Refresh, Save } from "@mui/icons-material";
@@ -104,9 +104,12 @@ export default function SaveLoadPanel() {
           aria-controls="save-panel-content"
           id="save-panel-header"
         >
-          <Typography variant="h6">
-            Save / load
-          </Typography>
+          <Tooltip title="Use this panel to save and load argumentation graphs
+          in your browser memory, for example to keep working on it later.">
+            <Typography variant="h6">
+              Save / load
+            </Typography>
+          </Tooltip>
         </CustomizedAccordionSummary>
         <CustomizedAccordionDetails>
           <Autocomplete

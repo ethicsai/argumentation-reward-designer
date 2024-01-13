@@ -15,7 +15,7 @@ import {
 } from "../nodes";
 import {
   Button, FormControl, FormControlLabel, FormHelperText, FormLabel,
-  InputAdornment, Radio, RadioGroup, TextField, Typography
+  InputAdornment, Radio, RadioGroup, TextField, Tooltip, Typography
 } from "@mui/material";
 import {
   AddCircle, LibraryAdd, Update
@@ -117,9 +117,12 @@ function NodeSidePanel() {
           aria-controls="node-panel-content"
           id="node-panel-header"
         >
-          <Typography variant="h6">
-            {formTitle}
-          </Typography>
+          <Tooltip title="Use this panel to modify the argumentation graph:
+          create new nodes, update existing ones, ...">
+            <Typography variant="h6">
+              {formTitle}
+            </Typography>
+          </Tooltip>
         </CustomizedAccordionSummary>
         <CustomizedAccordionDetails>
           <TextField
