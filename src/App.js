@@ -30,6 +30,8 @@ const initialEdges = [
 
 function App() {
 
+  // We want to keep `setNodes` even though we do not use it, because it is clearer.
+  // eslint-disable-next-line
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
