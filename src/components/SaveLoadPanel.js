@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import { DeleteOutline, Refresh, Save } from "@mui/icons-material";
+import {useSnackbar} from "notistack";
 
 
 /**
@@ -34,6 +35,7 @@ function refreshSaves() {
 export default function SaveLoadPanel() {
 
   const reactFlowInstance = useReactFlow();
+  const { enqueueSnackbar } = useSnackbar();
 
   const [saves, setSaves] = useState(refreshSaves());
   const [saveName, setSaveName] = useState(null);
@@ -79,15 +81,19 @@ export default function SaveLoadPanel() {
     const nodes = reactFlowInstance.getNodes();
     const edges = reactFlowInstance.getEdges();
     addManualSave(saveName.label, { nodes, edges });
+    const message = saveName.type === "new" ? "Save successfully created" : "Save successfully updated";
+    enqueueSnackbar(message, { variant: "success" });
     setSaves(refreshSaves());
   }
   const onClickLoadSave = () => {
     const { nodes, edges } = saveName.save;
     reactFlowInstance.setNodes(nodes);
     reactFlowInstance.setEdges(edges);
+    enqueueSnackbar('Save successfully loaded', { variant: "success" });
   }
   const onClickDeleteSave = () => {
     deleteManualSave(saveName.label);
+    enqueueSnackbar("Save successfully deleted", { variant: "success" });
     setSaves(refreshSaves());
   }
 
