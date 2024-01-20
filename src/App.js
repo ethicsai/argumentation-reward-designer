@@ -29,8 +29,9 @@ function App() {
               component="main"
               sx={{
                 flexGrow: 1,
-                // height: '100%',
-                // overflow: 'auto',
+                // The line below is a small hack to make sure that ReactFlow
+                // does not overflow.
+                height: 'calc(100% - 64px)',
               }}
             >
               <Toolbar />
