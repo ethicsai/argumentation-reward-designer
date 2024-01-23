@@ -1,0 +1,180 @@
+---
+title: "Exporting and importing"
+---
+
+Argumentation graphs can also be shared with colleagues or used in other
+applications.
+
+## Exporting
+
+When you are satisfied with your argumentation graph, you may use the "Import /
+export graph" panel on the right-hand sidebar to export it to a format that you
+can share or embed in your application.
+
+**ARD** offers the following formats: *PNG*, *Python*, *JSON*.
+
+### PNG
+
+The *PNG* image format is particularly suited to share the argumentation graph
+with colleagues. As an image, it will appear exactly as in your *flow* panel
+when opened in any image viewer.
+
+To export to a PNG file, open the "Import / export graph" panel, and click
+on the arrow button next to "Export to Python". This will open a drop-down
+menu, from which you can select "Export to PNG". The resulting PNG will
+automatically be downloaded as `judge.png` on your computer.
+
+For example, the following image was exported from **ARD** as a PNG:
+
+![Example of an exported argumentation graph to a PNG image](../../images/example_export_png.png)
+
+It also contains the necessary data to import the argumentation graph into
+**ARD** (more on that in [Importing](#importing)).
+
+### Python
+
+The *Python* format is meant to make the argumentation graph usable in a
+*Reinforcement Learning* framework, for example with [Ethical Smart Grid].
+
+It produces the Python source code necessary to generate the same argumentation
+graph, which can then be used with the **AJAR** library to produce reward
+functions that will judge agents' behaviours.
+
+To export to a Python file, click on the "Export to Python" button; the
+resulting Python code will be downloaded as `judge.py` on your computer.
+
+For example, the following source code was exported from the previous example:
+
+```python
+from .lib import AFDM, Argument
+
+dec = 'moral'
+afdm = AFDM()
+
+# Arguments
+afdm.add_argument(Argument(
+    'only_cumulus',
+    'Clouds are only cumulus',
+    lambda s: s['only_cumulus'] == True,
+
+))
+afdm.add_argument(Argument(
+    'clouds',
+    'There are clouds today',
+    lambda s: s['clouds'] > 0,
+    support=[dec]
+))
+
+# Attacks
+afdm.add_attack(attacker='only_cumulus', attacked='clouds')
+```
+
+Note that it expects to import the **AJAR** library from a `.lib` module; this
+corresponds to the structure in [Ethical Smart Grid].
+The code creates an *AFDM*, which is the name for an argumentation graph
+in **AJAR**, and adds the corresponding arguments and attacks.
+The `afdm` variable can then be used to create a *Judging Agent*, which
+represents the reward function) and trigger the judgment process:
+
+```python
+from .lib import JudgingAgent
+
+judge = JudgingAgent("moral value name", afdm)
+reward = judge.judge(situation, dec)
+```
+
+where `"moral value name"` is the name of the moral value you embedded in
+this argumentation graph, `dec` is set to `"moral"` in the exported source
+code, and `situation` must be an object that represents the current situation.
+In the "clouds" example, we may have: `situation = { 'clouds': 3,
+'only_cumulus': False }`.
+
+*Note*: it is recommended to let the "Include JSON in exports" box checked
+when exporting to Python. This allows importing back the Python file into
+**ARD**, to modify the argumentation graph.
+
+### JSON
+
+The *JSON* format is the base format for storing argumentation graphs in
+**ARD**. As-is, it can be useful to share a graph while being able to see
+its internal representation, without needing other uses.
+
+Contrary to *PNG*, it cannot be viewed as an image; and contrary to *Python*,
+it cannot be directly used in an application, although the JSON may be parsed.
+
+By its very nature, this format is made to be re-imported back into **ARD**.
+
+To export to *JSON*, click on the arrow button next to "Export to Python",
+and then select "Export to JSON" in the opened drop-down menu. The resulting
+JSON file will be downloaded as `judge.json` on your computer.
+
+For example, the previous example will be exported as: (abbreviated for
+conciseness):
+
+```json
+{
+  "nodes": [
+    {
+      "width": 150,
+      "height": 132,
+      "id": "2",
+      "position": { "x": 47.50285567190379, y": -65.78224853594335 },
+      "data": {
+        "label": "only_cumulus",
+        "name": "only_cumulus",
+        "desc": "Clouds are only cumulus",
+        "code": "s['only_cumulus'] == True",
+        "decision": ""
+      },
+      "selected": false,
+      "dragging": false,
+      "positionAbsolute": { "x": 47.50285567190379, "y": -65.78224853594335 }
+    },
+    (...)
+  ],
+  "edges": [
+    {
+      "source": "2",
+      "sourceHandle": null,
+      "target": "1",
+      "targetHandle": null,
+      "markerEnd": { "type": "arrowclosed" },
+      "id": "reactflow__edge-2-1"
+    }
+  ]
+}
+```
+
+*Note*: The required data for **AJAR** is in the `nodes[].data` dictionary,
+and in `edges[].source` and `edges[].target`. Other elements are important for
+the *React Flow* library that we use to create the interface.
+
+## Importing
+
+To import a previously exported argumentation graph, use the "Import from file"
+button. This will open your OS file chooser to select the file you desire
+to import.
+
+As mentioned previously, the *JSON* and *PNG* formats are natively made to
+support importing back into **ARD**.
+
+For *Python*, the "Include JSON into exports" box **must** have been checked
+when exporting, and the corresponding JSON code must not be modified within
+the Python file! This code is delimited by two blocks of comments:
+
+```python
+### BEGIN ARGUMENTATION GRAPH ###
+# These lines represent the (JSON-serialized) argumentation graph, so that
+# it can be imported into argumentation-reward-designer.
+# DO NOT MODIFY.
+# We use a multiline string so that it has no effect on the Python source code.
+(...)
+### END ARGUMENTATION GRAPH ###
+```
+
+Modifying the content between these blocks might result in **ARD** being
+incapable of importing the argumentation graph. The rest of the Python code
+can be modified.
+
+
+[Ethical Smart Grid]: https://github.com/ethicsai/ethical-smart-grid

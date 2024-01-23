@@ -1,0 +1,8 @@
+# Configuration and temporary files
+/.quarto/
+
+# Built artefact
+_site/
+
+# Temporary files when building pages
+*_files/

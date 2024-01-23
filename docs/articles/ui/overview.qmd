@@ -1,0 +1,29 @@
+---
+title: "Overview of the UI"
+---
+
+THe **ARD** UI is composed of several elements, illustrated below.
+
+![](../../images/ui.png){style="border: 1px grey dotted"}
+
+1. The *flow* panel: this is where the argumentation graph (nodes and edges)
+  will appear, and where you may move the arguments and create attacks between
+  them.
+
+2. The *sidebar*: it contains several panels (see 3, 4, 5) that can be opened
+  and close by clicking on their title.
+
+3. The *node creation and update* panel: this is where you may create new
+  arguments (nodes), or update a selected one.
+
+4. The *import / export* panel: this is where you can export the argumentation
+  graph to a format that can be shared (PNG, JSON) or used (Python) in your
+  code. These formats can also be imported back into **ARD** to modify the
+  argumentation graph.
+
+5. The *save / load* panel: this is where you may save the graph in your
+  browser memory, so you can access it later. This is purely local to your
+  computer.
+
+6. The *flow controls*: you may use it to change the current flow view, zoom,
+  de-zoom, fit the graph into the view, and lock the view.

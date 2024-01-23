@@ -1,0 +1,47 @@
+---
+title: "Introduction"
+---
+
+**Argumentation Reward Designer** (ARD) is a tool that helps you create
+argumentation graphs representing *moral values*. These argumentation graphs
+can be used to judge the behaviour of *learning agents*, with respect to a
+specific moral value.
+
+This tool assumes the following (*Reinforcement Learning*) framework:
+
+- You have an environment to train agents, for example a simulator such as
+  [Ethical Smart Grid](https://github.com/ethicsai/ethical-smart-grid).
+- You have a learning algorithm for the learning agents, such as QSOM, or
+  any other Reinforcement Learning algorithm, such as Q-Learning.
+- You want to train a *moral* (or *ethically-aligned*) behaviour through the
+  *reward functions*.
+
+**ARD** focuses on this last element, and helps you design those reward
+functions. Reward functions act as a signal for learning agents: because they
+are built to optimize the rewards they receive, the behaviour that they learn
+will be dictated by the reward function's definition.
+Basically, if the reward function is based on the distance walked, and returns
+a high reward (`+1`) for each step taken, then the agent will learn to walk
+as far as possible, so as to maximize the sum of received rewards.
+
+It seems thus quite intuitive to embed *moral values* within reward functions
+to get behaviours that are aligned with these moral values.
+**ARD** builds upon the **AJAR** work that proposes to use *argumentation
+graphs* to embed such moral values in reward functions.
+Argumentation graphs have several advantages, mainly:
+
+- They can be represented visually, which makes them easier to grasp.
+- Arguments can be added to prevent an identified reward hacking situation.
+- Argumentation theory is a natural way of thinking for humans, making it
+  appropriate for building reward functions with non-AI experts, such as
+  moral philosophers or domain experts.
+
+The **AJAR** library allows you to create reward functions from argumentation
+graphs; however, it requires building the graphs from hand, in Python code.
+This can be cumbersome, especially as the graph grows larger. To facilitate
+this, **ARD** is a tool built upon **AJAR** that provides a visual interface
+to build such graphs, which then translates to **AJAR** code.
+
+Continue to [Concepts](concepts.qmd) to learn about the concepts defined in
+**AJAR**, which are used in **ARD**, or skip straight to
+[Create a graph](../ui/create_graph.qmd) to learn how to use the **ARD** UI.

@@ -1,0 +1,31 @@
+project:
+  type: website
+
+website:
+  title: "Argumentation Reward Designer - Documentation"
+  site-url: "https://ethicsai.github.io/argumentation-reward-designer/docs/"
+  page-navigation: true
+  sidebar:
+    style: "docked"
+    search: true
+    contents:
+      - section: "Basics"
+        contents:
+          - articles/basics/introduction.qmd
+          - articles/basics/concepts.qmd
+      - section: "Using the UI"
+        contents:
+          - articles/ui/overview.qmd
+          - articles/ui/create_graph.qmd
+          - articles/ui/export.qmd
+          - articles/ui/save.qmd
+  repo-url: "https://github.com/ethicsai/argumentation-reward-designer/"
+  repo-branch: "master"
+  repo-subdir: "docs"
+  repo-actions: [edit, issue]
+
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    toc: true

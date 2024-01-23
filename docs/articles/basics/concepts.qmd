@@ -1,0 +1,143 @@
+---
+title: "Concepts"
+---
+
+**ARD** builds graphs that correspond to **AJAR**'s definition.
+In **AJAR**, an argumentation graph contains a set of *arguments*, represented
+by nodes, and a set of *attacks*, represented by directed edges between
+arguments.
+
+*Note: this page gives simplified definitions of several concepts, such as
+arguments and attacks. These definitions are sufficient to understand how to
+use **AJAR** and **ARD**, but they should not be considered as representative
+of the whole field of Argumentation Theory.*
+
+## Arguments
+
+An argument is a part of the reasoning. For example, we might have an argument
+"There are clouds today". This argument supports the decision "I should take
+an umbrella". It can be attacked by another argument "The clouds are only
+Cumulus", because Cumulus usually do not rain. Arguments, in a given situation,
+can be activated or killed: for example, if there are no clouds currently, the
+argument "There are clouds today" is false, and we do not consider it in the
+argumentation graph. Similarly, if the clouds are not Cumulus, the argument
+"The clouds are only Cumulus" is false, and we remove it as well as its attack
+from the graph.
+
+An argument contains a *name*, an optional *description*, an *activation
+function*, and a *decision*.
+
+### Name
+
+The *name* is a unique identifier for the argument. It should be short, avoid
+special characters (although it is not an obligation).
+For example, the name could be `"clouds"` for the "There are clouds" argument.
+
+### Description
+
+The *description* is an optional text, which can be longer than the name, to
+better describe what the argument is for.
+`"There are clouds today"` would be a suitable description for the previous
+example.
+
+### Activation function
+
+The *activation function* is a lambda-expression taking as input a situation
+and determining whether the argument should be considered active.
+
+The type of the situation will depend on the target environment, usually a
+dictionary will be used. For example, `lambda s: s['clouds'] > 0` is a
+correct activation function, assuming that the situation is a dictionary
+containing a number named `'clouds'`.
+
+### Decision
+
+The *decision* is the judgment outcome that an argument argues for:
+
+- `support`, meaning that the argument argues the currently judged agent's
+    behaviour promotes the specific moral value embedded in this graph.
+
+- `counter` (immoral), meaning that the argument argues the currently judged
+    agent's behaviour defeats the specific moral value embedded in this graph.
+
+- `neutral`, meaning that they do not argue the currently judged agent's
+    behaviour either promotes or defeats the specific moral value. Such
+    arguments can be useful to build complex attack relationships.
+
+
+## Attacks
+
+An attack is a relationship between 2 arguments, the attacker and the attacked.
+It means that, when the attacker is alive, the attacked argument should be
+"killed": it is no longer relevant.
+
+Another argument may "defend" the attacked one, by attacking its attacker.
+Let us consider 3 arguments, `a`, `b`, and `c`, with attacks such that `a`
+attacks `b`, and `b` attacks `c`. In other words, we have: `a -> b -> c`.
+If all of them are alive, then only `a` and `c` will be considered by the
+graph, because `a` attacks `b`, and nobody attacks `a`. Thus, `b` is "killed"
+by `a`. Even though `c` is attacked by `b`, `b` is no longer considered in the
+graph, and its attacks are removed, thus `c` remains alive.
+
+Attack relationships are the building basis to create complex reasoning in
+argumentation.
+
+## Judgment
+
+In the *Reinforcement Learning* framework, reward functions (and thus,
+argumentation graphs) are used to judge an agent's behaviour at each time step,
+based on the previous state, the action taken by the agent, and the new state
+this action led to.
+
+This is known as the *judgment* process in **AJAR**. It takes the situation,
+which represents the `(previous situation, action, next situation)` tuple,
+applies it to the argumentation graph, and returns a numeric reward based
+on the arguments.
+
+### Filtering alive arguments
+
+The argumentation graph built in **ARD** can be seen as a "complete" graph,
+taking all possible situations into account. This is where the [activation
+function](#activation-function) will be useful. The first step of the judgment
+process is to prune the arguments that are not considered "alive",
+according to the activation function applied to the current situation.
+
+When an argument is not "alive", it is removed from the filtered graph, as well
+as all its attacks. It is as if the argument never existed.
+This first step returns a copy of the argumentation graph that contains a
+subset of its arguments and attacks.
+
+### Acceptable arguments
+
+Because arguments can attack each other, we must have a way to consider only
+those that are "acceptable". In other words, we should not keep an argument
+which is contradicted by another one.
+
+Note that this is different from the "alive" part: an argument might be true
+in a given situation, but irrelevant because of another argument.
+
+For example, if there are several clouds in the air, the `"There are clouds"`
+argument is alive, and kept by the first filtering step. However, if another
+argument `"The clouds are only cumulus"` is also alive, and attacking `"There
+are clouds"`, then we should not consider `"There are clouds"` when choosing
+a decision.
+
+This is the step where the [attacks](#attacks) relationships will be used.
+Intuitively, this step retains only arguments that defend each other. The
+resulting set of arguments cannot contain an argument that is attacked by
+another argument of this set (otherwise, the result would be incoherent: we
+would "accept" two arguments that contradict each other).
+
+### Resulting reward
+
+The output of this judgment process must be a numeric reward that indicates
+how well the agent performed, with respect to the moral value embedded in
+this moral graph.
+
+At this point, we have a set of "acceptable" arguments, without any attack.
+This is where the arguments' [decision](#decision) will be used.
+Basically, AJAR will count the number of *supporting* and *countering*
+arguments, and return some sort of ratio between them (this behaviour is
+configurable in AJAR), such that more *supporting* arguments will make the
+reward closer to `1`, and more *countering* arguments will make the reward
+closer to `0`.

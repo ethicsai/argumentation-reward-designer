@@ -1,0 +1,58 @@
+---
+title: "Saving and loading from memory"
+---
+
+Besides exporting the argumentation graph to a file on your computer, you may
+also save it in your browser memory (*local storage*). This allows you to be
+able to quickly get back to the same graph later.
+
+You can do this by using the "Save / load" panel in the right-hand sidebar.
+
+## Create a new save
+
+To create a new save, open the "Save / load" panel and click on the "Saves"
+text field. Start typing the name that you desire for this new save; it
+will open a drop-down menu. Once you have entered the name, type the "Enter"
+button on your keyboard, or click on the "Create new (...)" button in the
+drop-down menu, where `(...)` is the name you entered.
+
+This will enable the "Create new save" button below this text field; click
+on it to actually create the save.
+
+## Update an existing save
+
+You must first find the existing save that you want to update. Similarly to
+the previous section, start typing in the "Saves" text field, to find this save.
+You may also use the drop-down menu: all existing saves will be displayed in
+this menu, and can be filtered by typing the beginning of the name.
+
+For example, if saves `A-1`, `A-2`, `B-1`, `B-2` exist, typing `A` in the text
+field will show only `A-1` and `A-2`.
+
+Click on one of these saves in the drop-down menu to select it. It will enable
+the "Overwrite save" button (among others) below the text field. Click on it
+to actually overwrite the previous save with the current content of the graph.
+
+## Load an existing save
+
+Exactly as in the previous section, you must first select a save. Start typing
+in the "Saves" text field, and select a save in the drop-down menu.
+
+This will enable the "Load save" button below the text field; click on it
+to actually replace your current graph with the save's content.
+
+*Note*: if you type a new name (that is, a save that does not yet exist), the
+"Load save" button will remain disabled. This is normal, because a non-existing
+save cannot be loaded.
+
+## Delete an existing save
+
+Again, this requires you to first select a save. Start typing in the "Saves"
+text field, and select a save in the drop-down menu.
+
+This will enable the "Delete save" button below the text field; click on it
+to actually delete the selected save.
+
+A deleted save cannot be recovered, so make sure you have selected the correct
+save twice!
+

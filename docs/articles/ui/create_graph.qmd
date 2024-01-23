@@ -1,0 +1,78 @@
+---
+title: "Create a graph"
+---
+
+When you open the **ARD** app, you are greeted with an empty graph.
+
+You may change the view by zooming or de-zooming (using your mouse scroll),
+and move the view by dragging the *flow* itself.
+
+## Create a new argument
+
+You may create arguments by using the "Node creation" panel in the right-hand
+sidebar.
+
+To do so, fill the different fields, which correspond to the argument's
+various elements (as described in [Concepts](../basics/concepts.qmd)):
+
+- Its *name* (a short and unique identifier).
+
+- An optional *description*.
+
+- An optional *activation function*, which is a lambda-expression. Note that,
+  as hinted by the UI, the `lambda s:` is already handled for you, so you
+  should only provide the lambda's body, using `s` as the name of the object
+  describing the current situation. For example, `s['clouds'] > 0` will render
+  as `lambda s: s['clouds'] > 0`.
+
+- The argument's *decision*: whether it supports, counters the moral value,
+  or is neutral.
+
+The only required field is *name*; *description* will default to no description;
+the default *activation function* will always return `True`; by default, the
+*neutral* decision is checked.
+
+Once all fields are filled, click on the "Add new node" to create the
+corresponding node (representing the argument) in the graph. The new node
+will appear in the *flow* panel, near its center (assuming that you have not
+moved the view).
+
+The argument's elements will appear inside the node (name, description,
+activation function); its background color indicates its decision.
+Supporting arguments have a blue background, whereas countering arguments
+have a red background. The neutral arguments have a white background.
+
+You may grab and drag the node around to move it within the graph; this is
+especially useful to organize the arguments.
+
+You can also duplicate an existing argument, by clicking on its corresponding
+node and using the "Duplicate node" button in this panel.
+
+## Create an attack between arguments
+
+Attacks can be created by dragging the cursor from an argument's handle
+(one of the black dots on the borders of the node representing the argument)
+to another argument's handle. A directed arrow will appear, meaning that the
+first argument attacks the second one.
+
+When hovering a handle, your cursor will change, signaling that you can start
+dragging it to create an edge (an attack). As soon as you start dragging,
+a grey line will appear between this handle and your current cursor position;
+release this line on another handle to create an attack.
+
+## Modifying an argument
+
+To modify an argument, click on its representing node to select it, then use
+the "Update node" panel in the right-hand sidebar to change any of its fields.
+
+Note that the *name* must still be unique: **ARD** will prevent you from
+modifying a node such that its name will be the same as another existing node.
+
+Click anywhere else in the *flow* panel to un-select the node, and return to
+the "Node creation" panel.
+
+## Deleting arguments and attacks
+
+Arguments and attacks can be deleted by clicking on them to select them, then
+pressing the "Delete" button on your keyboard.
+
