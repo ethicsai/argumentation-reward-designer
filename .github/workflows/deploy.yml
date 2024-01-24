@@ -27,6 +27,9 @@ jobs:
           # Use a LTS active version. Node 20 will remain supported until 2026.
           node-version: '20.x'
           cache: 'npm'
+      # We must also install Quarto to build the documentation (in `docs/`)
+      - name: Install Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
       # Install dependencies (`npm ci` is similar to `npm install`, but for
       # "clean" environments, such as CI).
       - name: Install Node dependencies
