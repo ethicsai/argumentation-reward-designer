@@ -8,6 +8,7 @@ import MuiAppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import GitHubIcon from '@mui/icons-material/GitHub';
 import HelpIcon from '@mui/icons-material/Help';
+import ArticleIcon from '@mui/icons-material/Article';
 
 
 const AppBar = styled(MuiAppBar)(
@@ -50,6 +51,17 @@ export default function CustomizedAppBar() {
               onClick={() => setDialogOpened(true)}
             >
               <HelpIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Open documentation in new tab">
+            <IconButton
+              size="large"
+              aria-label="open documentation"
+              color="inherit"
+              href="./docs/index.html"
+              target="_blank"
+            >
+              <ArticleIcon />
             </IconButton>
           </Tooltip>
         </Box>
