@@ -94,7 +94,7 @@ function exportAttackToPython(edge, nodesIdToName) {
 function exportToPython(nodes, edges, addJson = false) {
 
   let code = `
-from .lib import AFDM, Argument
+from ajar import AFDM, Argument
 
 dec = 'moral'
 

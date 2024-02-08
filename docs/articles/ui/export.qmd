@@ -46,7 +46,7 @@ resulting Python code will be downloaded as `judge.py` on your computer.
 For example, the following source code was exported from the previous example:
 
 ```python
-from .lib import AFDM, Argument
+from ajar import AFDM, Argument
 
 dec = 'moral'
 afdm = AFDM()
@@ -69,17 +69,17 @@ afdm.add_argument(Argument(
 afdm.add_attack(attacker='only_cumulus', attacked='clouds')
 ```
 
-Note that it expects to import the **AJAR** library from a `.lib` module; this
-corresponds to the structure in [Ethical Smart Grid].
+Note that it expects to import the **AJAR** library; it must be installed
+through ``pip install git+https://github.com/ethicsai/ajar.git``.
 The code creates an *AFDM*, which is the name for an argumentation graph
 in **AJAR**, and adds the corresponding arguments and attacks.
 The `afdm` variable can then be used to create a *Judging Agent*, which
 represents the reward function) and trigger the judgment process:
 
 ```python
-from .lib import JudgingAgent
+from ajar import JudgingAgent, judgment
 
-judge = JudgingAgent("moral value name", afdm)
+judge = JudgingAgent("moral value name", afdm, judgment.j_simple)
 reward = judge.judge(situation, dec)
 ```
 
